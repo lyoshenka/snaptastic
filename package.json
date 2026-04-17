@@ -1,0 +1,42 @@
+{
+  "name": "snaptastic",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.32.1",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate"
+  },
+  "dependencies": {
+    "@farcaster/snap": "^2.0.3",
+    "@libsql/client": "^0.17.2",
+    "@vercel/blob": "^2.3.3",
+    "drizzle-orm": "^0.45.2",
+    "nanoid": "^5.1.9",
+    "neverthrow": "^8.2.0",
+    "next": "^16.2.4",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "sharp": "^0.34.5"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "autoprefixer": "^10.4.20",
+    "drizzle-kit": "^0.31.10",
+    "@tailwindcss/postcss": "^4.2.2",
+    "postcss": "^8.5.0",
+    "tailwindcss": "^4.2.2",
+    "typescript": "^5.7.0",
+    "vitest": "^4.1.4"
+  }
+}

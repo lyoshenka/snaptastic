@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: light dark;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #f5f5f0;
+  color: #1a1a1a;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  min-height: 100dvh;
+}
+
+/* blocks.css bumps everything around with hard shadows. keep it playful. */
+.block-card {
+  background: #fff;
+  border: 2px solid #1a1a1a;
+  box-shadow: 6px 6px 0 0 #1a1a1a;
+  border-radius: 8px;
+}
+
+.block-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: #1a1a1a;
+  color: #fff;
+  border: 2px solid #1a1a1a;
+  padding: 0.75rem 1.25rem;
+  font-weight: 700;
+  font-size: 1rem;
+  border-radius: 8px;
+  box-shadow: 4px 4px 0 0 #1a1a1a;
+  cursor: pointer;
+  transition: transform 80ms ease, box-shadow 80ms ease;
+  min-height: 44px;
+  text-decoration: none;
+}
+.block-btn:hover {
+  transform: translate(1px, 1px);
+  box-shadow: 3px 3px 0 0 #1a1a1a;
+}
+.block-btn:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0 0 0 0 #1a1a1a;
+}
+.block-btn.block-btn--accent {
+  background: #f59e0b;
+  color: #1a1a1a;
+}
