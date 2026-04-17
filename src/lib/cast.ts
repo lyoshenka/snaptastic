@@ -10,7 +10,7 @@ export function buildCastUrl(snapUrl: string, text: string = CAST_CAPTION): stri
 }
 
 export function resolveBaseUrl(host?: string | null, proto?: string | null): string {
-  const explicit = process.env.PUBLIC_BASE_URL;
+  const explicit = process.env.BASE_URL ?? process.env.PUBLIC_BASE_URL;
   if (explicit) return explicit.replace(/\/$/, "");
   if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
   if (host) {
