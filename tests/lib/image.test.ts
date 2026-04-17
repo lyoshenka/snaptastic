@@ -40,7 +40,7 @@ describe("processImage", () => {
     // Blurred is a valid JPEG whose longest edge is ≤64px.
     const meta = await sharp(result.value.blurred).metadata();
     expect(meta.format).toBe("jpeg");
-    expect(Math.max(meta.width ?? 0, meta.height ?? 0)).toBeLessThanOrEqual(64);
+    expect(Math.max(meta.width ?? 0, meta.height ?? 0)).toBeLessThanOrEqual(300);
   });
 
   it("errors on garbage input", async () => {

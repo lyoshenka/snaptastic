@@ -47,11 +47,12 @@ export function processImage(input: Buffer, declaredContentType?: string): Resul
       }
       const aspect = pickAspect(meta.width, meta.height);
 
-      // Blurred preview: downscale to 64px on longest edge, blur, re-encode JPEG.
+      // Blurred preview: downscale to 300px on longest edge, blur, re-encode JPEG.
+      // Goal: rough shapes + color patches visible, fine detail (faces, text, clothing) illegible.
       const blurred = await sharp(input)
         .rotate() // respect EXIF
-        .resize({ width: 64, height: 64, fit: "inside", withoutEnlargement: true })
-        .blur(15)
+        .resize({ width: 300, height: 300, fit: "inside", withoutEnlargement: true })
+        .blur(8)
         .jpeg({ quality: 80 })
         .toBuffer();
 
