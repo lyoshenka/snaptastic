@@ -23,7 +23,7 @@ let cached: { client: Client; db: Db } | null = null;
 
 export function getDb(): Db {
   if (cached) return cached.db;
-  const url = process.env.TURSO_URL ?? "file:./local.db";
+  const url = process.env.TURSO_DATABASE_URL ?? process.env.TURSO_URL ?? "file:./local.db";
   const authToken = process.env.TURSO_AUTH_TOKEN;
   const client = createClient({ url, authToken });
   const db = drizzle(client, { schema: { snaps } });
