@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { findBySnapId } from "@/lib/db";
 import { buildSnap, SNAP_MEDIA_TYPE, wantsSnapJson } from "@/lib/snap";
-import { resolveBaseUrl, revealUrlFor } from "@/lib/cast";
+import { resolveBaseUrl, revealUrlFor, snapUrlFor } from "@/lib/cast";
 import { errorToStatus, type AppError } from "@/lib/errors";
 import type { Aspect } from "@/lib/image";
 
@@ -21,9 +21,24 @@ export async function GET(
   const row = await findBySnapId(snapId);
   if (row.isErr()) return errorResponse(row.error);
 
-  // Browser hit with Accept: text/html → redirect to reveal page so raw clicks still work.
+  const snapSelfUrl = snapUrlFor(base, snapId);
+  const linkHeader = `<${snapSelfUrl}>; rel="alternate"; type="${SNAP_MEDIA_TYPE}"`;
+
+  // Browser hit with Accept: text/html → return minimal HTML that redirects to reveal page.
+  // We must NOT redirect directly here — crawlers need to see the Link header on this URL.
   if (!wantsSnapJson(accept)) {
-    return NextResponse.redirect(revealUrlFor(base, row.value.imageId), 302);
+    const revealUrl = revealUrlFor(base, row.value.imageId);
+    return new NextResponse(
+      `<!doctype html><html><head><meta http-equiv="refresh" content="0;url=${revealUrl}"></head><body></body></html>`,
+      {
+        status: 200,
+        headers: {
+          "Content-Type": "text/html; charset=utf-8",
+          Link: linkHeader,
+          Vary: "Accept",
+        },
+      },
+    );
   }
 
   const snap = buildSnap({
@@ -39,6 +54,7 @@ export async function GET(
       "Content-Type": SNAP_MEDIA_TYPE,
       "Access-Control-Allow-Origin": "*",
       "Cache-Control": "public, max-age=60, stale-while-revalidate=3600",
+      Link: linkHeader,
       Vary: "Accept",
     },
   });

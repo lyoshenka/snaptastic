@@ -13,6 +13,7 @@ describe("buildCastUrl", () => {
 describe("resolveBaseUrl", () => {
   const originalEnv = { ...process.env };
   beforeEach(() => {
+    delete process.env.SNAPTASTIC_BASE_URL;
     delete process.env.PUBLIC_BASE_URL;
     delete process.env.VERCEL_URL;
   });

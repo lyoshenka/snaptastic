@@ -26,11 +26,12 @@ describe("GET /s/[snapId]", () => {
       headers: { accept: MEDIA_TYPE, host: "localhost:3000" },
     });
     const res = await GET(req, { params: Promise.resolve({ snapId: "snap1234" }) });
-
     expect(res.status).toBe(200);
     expect(res.headers.get("content-type")).toBe(MEDIA_TYPE);
     expect(res.headers.get("access-control-allow-origin")).toBe("*");
     expect(res.headers.get("cache-control")).toContain("max-age=60");
+    expect(res.headers.get("link")).toContain(`rel="alternate"`);
+    expect(res.headers.get("link")).toContain(MEDIA_TYPE);
 
     const json = await res.json();
     const v = validateSnapResponse(json);
@@ -39,13 +40,17 @@ describe("GET /s/[snapId]", () => {
     expect(json.ui.elements.btn.on.press.params.target).toBe("http://localhost:3000/i/imag5678");
   });
 
-  it("redirects to reveal page for html requests", async () => {
+  it("returns HTML with Link header and meta-refresh for html requests", async () => {
     const req = new NextRequest("http://localhost:3000/s/snap1234", {
       headers: { accept: "text/html", host: "localhost:3000" },
     });
     const res = await GET(req, { params: Promise.resolve({ snapId: "snap1234" }) });
-    expect(res.status).toBe(302);
-    expect(res.headers.get("location")).toBe("http://localhost:3000/i/imag5678");
+    expect(res.status).toBe(200);
+    expect(res.headers.get("content-type")).toContain("text/html");
+    expect(res.headers.get("link")).toContain(`rel="alternate"`);
+    expect(res.headers.get("link")).toContain(MEDIA_TYPE);
+    const html = await res.text();
+    expect(html).toContain("http://localhost:3000/i/imag5678");
   });
 
   it("404s on unknown snapId", async () => {
