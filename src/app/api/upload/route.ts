@@ -10,7 +10,7 @@ import { err, errorToStatus, type AppError } from "@/lib/errors";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const MAX_BYTES = 10 * 1024 * 1024;
+const MAX_BYTES = 25 * 1024 * 1024;
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   const result = await parseForm(req)

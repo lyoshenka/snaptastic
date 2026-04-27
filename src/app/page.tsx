@@ -4,7 +4,7 @@ import { useState, useCallback } from "react";
 import Dropzone from "@/components/Dropzone";
 import AlertDialog from "@/components/AlertDialog";
 
-const MAX_BYTES = 10 * 1024 * 1024;
+const MAX_BYTES = 25 * 1024 * 1024;
 
 type UploadState =
   | { status: "idle" }
@@ -54,7 +54,7 @@ export default function Page() {
     if (rawFile.size > MAX_BYTES) {
       setAlert({
         title: "too big",
-        message: `max 10 MB, got ${(rawFile.size / 1024 / 1024).toFixed(1)} MB`,
+        message: `max 25 MB, got ${(rawFile.size / 1024 / 1024).toFixed(1)} MB`,
       });
       return;
     }
