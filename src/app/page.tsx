@@ -64,7 +64,7 @@ export default function Page() {
         <header className="mb-6 sm:mb-10 text-center">
           <h1 className="text-3xl sm:text-4xl font-black tracking-tight">snaptastic</h1>
           <p className="text-sm sm:text-base opacity-70 mt-1">
-            pay per snap
+            spicy snaps on fc
           </p>
         </header>
 
