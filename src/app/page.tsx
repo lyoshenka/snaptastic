@@ -22,19 +22,53 @@ export default function Page() {
     setTimeout(() => setCopied(false), 2000);
   }, []);
 
-  async function handleFile(file: File) {
-    if (!file.type.startsWith("image/")) {
-      setAlert({ title: "not an image", message: `got: ${file.type || "unknown"}` });
+  async function normalizeToJpeg(file: File): Promise<File> {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      const url = URL.createObjectURL(file);
+      img.onload = () => {
+        URL.revokeObjectURL(url);
+        const canvas = document.createElement("canvas");
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+        canvas.getContext("2d")!.drawImage(img, 0, 0);
+        canvas.toBlob(
+          (blob) => {
+            if (!blob) { reject(new Error("canvas conversion failed")); return; }
+            resolve(new File([blob], file.name.replace(/\.[^.]+$/, ".jpg"), { type: "image/jpeg" }));
+          },
+          "image/jpeg",
+          0.92,
+        );
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error("could not decode image")); };
+      img.src = url;
+    });
+  }
+
+  async function handleFile(rawFile: File) {
+    if (!rawFile.type.startsWith("image/")) {
+      setAlert({ title: "not an image", message: `got: ${rawFile.type || "unknown"}` });
       return;
     }
-    if (file.size > MAX_BYTES) {
+    if (rawFile.size > MAX_BYTES) {
       setAlert({
         title: "too big",
-        message: `max 10 MB, got ${(file.size / 1024 / 1024).toFixed(1)} MB`,
+        message: `max 10 MB, got ${(rawFile.size / 1024 / 1024).toFixed(1)} MB`,
       });
       return;
     }
     setState({ status: "uploading" });
+    let file: File;
+    try {
+      // Convert non-JPEG/PNG to JPEG via canvas so the server always gets a sharp-compatible format.
+      const needsConversion = !["image/jpeg", "image/png", "image/webp", "image/gif"].includes(rawFile.type);
+      file = needsConversion ? await normalizeToJpeg(rawFile) : rawFile;
+    } catch (e) {
+      setState({ status: "idle" });
+      setAlert({ title: "could not read image", message: e instanceof Error ? e.message : String(e) });
+      return;
+    }
     try {
       const form = new FormData();
       form.append("file", file);
