@@ -23,7 +23,7 @@ export default function AlertDialog({ open, title, message, onClose }: Props) {
     <dialog
       ref={ref}
       onClose={onClose}
-      className="block-card max-w-sm w-[min(92vw,24rem)] p-6 backdrop:bg-black/50"
+      className="block-card max-w-sm w-[min(92vw,24rem)] p-6 backdrop:bg-black/50 fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 m-0"
     >
       <h2 className="text-lg font-bold mb-2">{title}</h2>
       <p className="text-sm mb-4 whitespace-pre-wrap">{message}</p>

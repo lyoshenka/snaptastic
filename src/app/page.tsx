@@ -41,7 +41,14 @@ export default function Page() {
       const res = await fetch("/api/upload", { method: "POST", body: form });
       if (!res.ok) {
         const body = await res.text();
-        throw new Error(body || `upload failed (${res.status})`);
+        let message = `upload failed (${res.status})`;
+        try {
+          const json = JSON.parse(body) as { message?: string };
+          if (json.message) message = json.message;
+        } catch {
+          if (body) message = body;
+        }
+        throw new Error(message);
       }
       const data = (await res.json()) as { snapId: string; snapUrl: string; castUrl: string };
       setState({ status: "done", snapId: data.snapId, snapUrl: data.snapUrl, castUrl: data.castUrl });
